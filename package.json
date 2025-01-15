@@ -1,0 +1,16 @@
+{
+  "name": "firebase-emulator-setup",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "firebase:login": "node_modules/.bin/firebase login",
+    "firebase:init": "node_modules/.bin/firebase init",
+    "functions:build": "cd functions && npm run build:watch",
+    "firebase:emulator": "node_modules/.bin/firebase emulators:start --project demo-project  --only auth,firestore,storage,functions",
+    "firebase:emulator:export-on-exit": "node_modules/.bin/firebase emulators:start --project demo-project --export-on-exit=\"./caches/history/$(date +%Y-%m-%d+%H:%M:%S)\" --only auth,firestore,functions,storage",
+    "firebase:emulator:cache": "node_modules/.bin/firebase emulators:start --project demo-project --import=\"./caches/seeds/seed1\" --export-on-exit=\"./caches/history/$(date +%Y-%m-%d+%H:%M:%S)\" --project demo-project  --only auth,firestore,functions,storage"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.29.1"
+  }
+}
