@@ -1,79 +1,81 @@
-## setup your firebase project in the firebase admin UI
+# Firebase Emulator Setup
 
-- create a firebase account at console.firebase.google.com
-- create a project
-- select the project
+## Setup your firebase project in the firebase admin UI
 
-  - create a firebase web app within the project
-  - create auth, firestore, storage and functions in the project
+- Create a firebase account at console.firebase.google.com
+- Create a project
+- Select the project
 
-## setup your project
+  - Create a firebase web app within the project
+  - Create auth, firestore, storage and functions in the project
 
-- create your new project directory and initialise it: `npm init`
-- install firebase-tools
+## Setup your project
 
-  - as a project dependency: `npm install -D firebase-tools`
-  - globally: `npm install -g firebase-tools`
-    - this allows for firebase commands to be run with either `firebase` or `node_modules/.bin/firebase`. For example;
+- Create your new project directory and initialise it: `npm init`
+- Install firebase-tools
+
+  - As a project dependency: `npm install -D firebase-tools`
+  - Globally: `npm install -g firebase-tools`
+    - This allows for firebase commands to be run with either `firebase` or `node_modules/.bin/firebase`. For example;
       - `firebase init` or `node_modules/.bin/firebase init`
-      - to make it easier add any scripts to `package.json` script as follows: `"firebase:init": "node_modules/.bin/firebase init"`
-    - all firebase commands in this readme are stored in the `package.json` scripts section to make it easier to run
+      - To make it easier add any scripts to `package.json` script as follows: `"firebase:init": "node_modules/.bin/firebase init"`
+    - All firebase commands in this readme are stored in the `package.json` scripts section to make it easier to run
 
-## setup firebase within your project
+## Setup firebase within your project
 
-- login to firebase: `firebase login`
-  - follow the cli wizard
-- initialize firebase project: `firebase init`. Some steps missing, use the default values and install all dependencies
+- Login to firebase: `firebase login`
+  - Follow the cli wizard
+- Initialize firebase project: `firebase init`. Some steps missing, use the default values and install all dependencies
 
-  - from the first products selector select firestore, functions, storage and emulators (auth probably won't be in the list)
-  - from the emulator products selector select auth, firestore, functions, storage and emulators
+  - From the first products selector select firestore, functions, storage and emulators (auth probably won't be in the list)
+  - From the emulator products selector select auth, firestore, functions, storage and emulators
   - When you get to functions, select typescript as the language
-  - continue with CLI wizard until setup is complete
+  - Continue with CLI wizard until setup is complete
 
-## functions
+## Functions
 
-- navigate to the functions directory and compile typescript on save: `cd functions && npm run build:watch`
-  - go to `functions/src/index.ts` and uncomment the helloWorld function
-  - you may find that you get errors in the IDE, this can be resolved with the following
-    - copy the `tsconfig.json` file from the functions directory to the root of the project
-    - edit the new `tsconfig.json` file to prefix any file paths with `functions/`
-    - if you get an error from the IDE when accessing the `.eslintrc.js` file, change the file name to `.eslintrc.mjs` and change the `module.exports = {` to `export default {`
+- Navigate to the functions directory and compile typescript on save: `cd functions && npm run build:watch`
+  - Go to `functions/src/index.ts` and uncomment the helloWorld function
+  - You may find that you get errors in the IDE, this can be resolved with the following
+    - Copy the `tsconfig.json` file from the functions directory to the root of the project
+    - Edit the new `tsconfig.json` file to prefix any file paths with `functions/`
+    - If you get an error from the IDE when accessing the `.eslintrc.js` file, change the file name to `.eslintrc.mjs` and change the `module.exports = {` to `export default {`
 
-## tidy
+## Tidy
 
-- in the `firebase.json` file, there are many file paths that need to be updated to improve the project structure
-  - update the `firestore.rules` path to `firestore/firestore.rules` and do the same for indexes then move the files to a `firestore` directory
-  - update the `storage.rules` path to `storage/storage.rules` then move the files to a `storage` directory
+- In the `firebase.json` file, there are many file paths that need to be updated to improve the project structure
+  - Update the `firestore.rules` path to `firestore/firestore.rules` and do the same for indexes then move the files to a `firestore` directory
+  - Update the `storage.rules` path to `storage/storage.rules` then move the files to a `storage` directory
 
-## history
+## History
 
-- create a cache directory in the root of the project: `mkdir caches`
-  - create a history directory in the caches directory: `mkdir caches/history`
-  - create a seeds directory in the caches directory: `mkdir caches/seeds`
-  - summarised by: `mkdir caches caches/history caches/seeds`
-- create a firebase cache:
-  - run `npm run firebase:emulator:export-on-exit`
-  - stop above command with ctrl+c / cmd+c
-    - this will create a cache file in the `caches/history` directory
-- import the cache by moving the file to the `caches/seeds` directory and renaming it to `seed1`
-- don't unnecessarily add caches to git by doing the following:
-  - add a blank file `caches/history/.gitkeep`
-  - add the following lines to `.gitignore` file:
+- Create a cache directory in the root of the project: `mkdir caches`
+  - Create a history directory in the caches directory: `mkdir caches/history`
+  - Create a seeds directory in the caches directory: `mkdir caches/seeds`
+  - Summarised by: `mkdir caches caches/history caches/seeds`
+- Create a firebase cache:
+  - Run `npm run firebase:emulator:export-on-exit`
+  - Stop above command with ctrl+c / cmd+c
+    - This will create a cache file in the `caches/history` directory
+- Import the cache by moving the file to the `caches/seeds` directory and renaming it to `seed1`
+- Don't unnecessarily add caches to git by doing the following:
+  - Add a blank file `caches/history/.gitkeep`
+  - Add the following lines to `.gitignore` file:
     - `caches/history/*`
     - `!caches/history/.gitkeep`
 - You can now run `npm run firebase:emulator:cache` as your default emulator command. It does the following:
-  - on start: loads the seed file
-  - on stop: saves a cache to `caches/history`
+  - On start: loads the seed file
+  - On stop: saves a cache to `caches/history`
 
-## connecting your FE to the emulator
+## Connecting your FE to the emulator
 
-- prefix your dev-server start command with `SOME_ENV_KEY=true` to enable the environment variable `SOME_ENV_KEY` and set it to `true`. For example:
-  - if your dev-server start command is `npm run dev` then change it to `USE_FIREBASE_EMULATOR=true npm run dev`
-  - you may need to add a prefix to get this to work on some frameworks. If you're using Next.js, you will need the command to be `NEXT_PUBLIC_USE_FIREBASE_EMULATOR=true npm run dev`
-- in the `firebase:emulator` script in the `package.json` we have used the name demo-project. Get the firebase config from project settings and change the name for each value in the config to `demo-project`.
-- initialise the app: `const app = initializeApp(firebaseConfig);`
-- get auth,firestore,storage,functions: `const db = getAuth(app);` etc.
-- connect auth,firestore,storage,functions to emulator: `connectAuthEmulator(auth, "http://127.0.0.1:9099");` etc.
+- Prefix your dev-server start command with `SOME_ENV_KEY=true` to enable the environment variable `SOME_ENV_KEY` and set it to `true`. For example:
+  - If your dev-server start command is `npm run dev` then change it to `USE_FIREBASE_EMULATOR=true npm run dev`
+  - You may need to add a prefix to get this to work on some frameworks. If you're using Next.js, you will need the command to be `NEXT_PUBLIC_USE_FIREBASE_EMULATOR=true npm run dev`
+- In the `firebase:emulator` script in the `package.json` we have used the name demo-project. Get the firebase config from project settings and change the name for each value in the config to `demo-project`.
+- Initialise the app: `const app = initializeApp(firebaseConfig);`
+- Get auth,firestore,storage,functions: `const db = getAuth(app);` etc.
+- Connect auth,firestore,storage,functions to emulator: `connectAuthEmulator(auth, "http://127.0.0.1:9099");` etc.
 - The resulting file should look like this:
 
 ```ts
